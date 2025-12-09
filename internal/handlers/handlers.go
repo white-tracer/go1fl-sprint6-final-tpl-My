@@ -15,6 +15,7 @@ import (
 )
 
 func MainHandler(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
 	filePath := "../index.html"
 
 	if _, err := os.Stat(filePath); os.IsNotExist(err) {
@@ -26,6 +27,7 @@ func MainHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func UploadHandler(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
 	if r.Method != http.MethodPost {
 		log.Printf("%v method not allowed", http.StatusMethodNotAllowed)
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
@@ -73,22 +75,23 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
 				convertedFileContent := service.LineConverter(string(fileContent))
 				log.Printf("Содержимое файла (%d байт) конвертировано и находится в переменной.", len(convertedFileContent))
 
-				uploadedFilename, err := saveBufferWithUniqueName([]byte(convertedFileContent), uploadDir)
+				_, err = saveBufferWithUniqueName([]byte(convertedFileContent), uploadDir)
 				if err != nil {
 					log.Printf("saveBufferWithUniqueName error: %v", err)
 					http.Error(w, "ошибка при сохранении файла с уникальным именем", http.StatusInternalServerError)
 					return
 				}
-				fmt.Fprintf(w, "uploaded: %s. Сохранено как: %s\n", filepath.Base(hdr.Filename), uploadedFilename)
+
+				fmt.Fprintln(w, convertedFileContent)
 				return
 			}
+		} else {
+			// если ничего не нашлось
+			http.Error(w, "no file in multipart form", http.StatusBadRequest)
 		}
-		// если ничего не нашлось
-		http.Error(w, "no file in multipart form", http.StatusBadRequest)
 		return
 	}
 
-	http.Error(w, "неподдерживаемый Content-Type или не найден файл", http.StatusBadRequest)
 }
 
 // Вспомогательные функциии для хэндлеров
