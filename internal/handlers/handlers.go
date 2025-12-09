@@ -28,6 +28,8 @@ func MainHandler(w http.ResponseWriter, r *http.Request) {
 
 func UploadHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+
 	if r.Method != http.MethodPost {
 		log.Printf("%v method not allowed", http.StatusMethodNotAllowed)
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
@@ -44,7 +46,7 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// 1) В Headers Content-Type Multipart Form-Data, но пример из урока не сработал. Пробую так
+	// 1 В Headers Content-Type Multipart Form-Data, но пример из урока не сработал. Пробую так
 	if strings.HasPrefix(ct, "multipart/") {
 		// безопасный лимит в памяти (10 MB)
 		_ = r.ParseMultipartForm(10 << 20)
@@ -82,7 +84,7 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
 					return
 				}
 
-				fmt.Fprintln(w, convertedFileContent)
+				fmt.Fprint(w, convertedFileContent)
 				return
 			}
 		} else {
