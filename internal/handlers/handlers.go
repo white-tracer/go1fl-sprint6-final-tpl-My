@@ -27,8 +27,8 @@ func MainHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func UploadHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
-	w.Header().Set("Content-Type", "text/html")
 
 	if r.Method != http.MethodPost {
 		log.Printf("%v method not allowed", http.StatusMethodNotAllowed)
@@ -128,4 +128,5 @@ func saveBufferWithUniqueName(content []byte, uploadDir string) (string, error) 
 	}
 
 	return uniqueFilename, nil
+
 }
