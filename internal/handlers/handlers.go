@@ -16,7 +16,7 @@ import (
 
 func MainHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
-	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	w.Header().Set("Content-Type", "text/html")
 	filePath := "../index.html"
 
 	if _, err := os.Stat(filePath); os.IsNotExist(err) {
