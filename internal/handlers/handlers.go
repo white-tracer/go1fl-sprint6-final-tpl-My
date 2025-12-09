@@ -16,7 +16,7 @@ import (
 
 func MainHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
-	w.Header().Set("Content-Type", "text/html")
+	w.Header().Set("Content-Type", "text/html; charset=UTF-8")
 	filePath := "../index.html"
 
 	if _, err := os.Stat(filePath); os.IsNotExist(err) {
@@ -29,7 +29,7 @@ func MainHandler(w http.ResponseWriter, r *http.Request) {
 
 func UploadHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
-	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 
 	if r.Method != http.MethodPost {
 		log.Printf("%v method not allowed", http.StatusMethodNotAllowed)
